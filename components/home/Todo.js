@@ -1,26 +1,43 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import AppList from '../app/AppList';
+
 import colors from '../../config/Colors';
 
 const Todo = ({ list }) => {
+  const [openListModal, setOpenListModal] = useState(false);
+
   const completedCount = list.todos.filter((todo) => todo.completed).length;
   const remaningCount = list.todos.length - completedCount;
 
+  const toggleListModal = () => setOpenListModal(!openListModal);
+
   return (
-    <View style={[styles.container, { backgroundColor: list.color }]}>
-      <Text style={styles.listTitle} numberOfLines={1}>
-        {list.name}
-      </Text>
-      <View>
-        <View style={styles.center}>
-          <Text style={styles.count}>{remaningCount}</Text>
-          <Text style={styles.subtitle}>Remaining</Text>
+    <View>
+      <AppList
+        toggleListModal={toggleListModal}
+        openListModal={openListModal}
+        list={list}
+        completedCount={completedCount}
+      />
+      <TouchableOpacity
+        style={[styles.container, { backgroundColor: list.color }]}
+        onPress={toggleListModal}
+      >
+        <Text style={styles.listTitle} numberOfLines={1}>
+          {list.name}
+        </Text>
+        <View>
+          <View style={styles.center}>
+            <Text style={styles.count}>{remaningCount}</Text>
+            <Text style={styles.subtitle}>Remaining</Text>
+          </View>
+          <View style={styles.center}>
+            <Text style={styles.count}>{completedCount}</Text>
+            <Text style={styles.subtitle}>Completed</Text>
+          </View>
         </View>
-        <View style={styles.center}>
-          <Text style={styles.count}>{completedCount}</Text>
-          <Text style={styles.subtitle}>Completed</Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
